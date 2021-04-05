@@ -12,7 +12,10 @@ router.register(r'users', views.UserViewSet)
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    #path('', include(router.urls)),
+    path('', views.homePage, name='homepage'),
+    path('homepage/course', views.coursePage, name='coursePage'),
+    path('homepage/break', views.breakPage, name='breakPage'),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)

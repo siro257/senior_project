@@ -14,6 +14,7 @@ from api_basic.models import Course
 from api_basic.serializers import CourseSerializer, UserSerializer
 from api_basic.permissions import IsOwnerOrReadOnly
 
+from django.shortcuts import render
 # Create your views here.
 
 
@@ -23,7 +24,6 @@ def api_root(request, format=None):
         'users': reverse('user-list', request=request, format=format),
         'courses': reverse('course-list', request=request, format=format)
     })
-
 
 # class UserList(generics.ListAPIView):
 #     queryset = User.objects.all()
@@ -67,3 +67,15 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 #     queryset = Course.objects.all()
 #     serializer_class = CourseSerializer
+
+
+# view function for home page of site.
+def homePage(request):
+    return render(request, 'homepage.html')
+
+# view function for add a course page
+def coursePage(request):
+    return render(request, 'coursePage.html')
+
+def breakPage(request):
+    return render(request, 'breakPage.html')

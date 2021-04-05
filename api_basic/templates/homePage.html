@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+
+{% block content %}
+    <div class = "actions">
+        <ul class = "addSth">
+            <li><a href="{% url 'coursePage' %}">Add A Course</a></li>
+            <li><a href="{% url 'breakPage' %}">Add A Break</a></li>
+        </ul>
+    </div>
+{% endblock %}
