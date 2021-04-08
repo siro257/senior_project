@@ -1,0 +1,41 @@
+{% extends "base_generic.html" %}
+{% load custom_tags %}
+{% total_courses %} courses<br> 
+{% comment %} {% for course in courses %}
+{{course.subject}} {{course.catalog_number}} ::: {{course.course_title}} ::: {{course.course_type}} ::: {{course.dates}} ::: {{course.credit}} ::: {{course.meeting_time}} ::: {{course.room}}
+::: {{course.instructor}} {% get_prof_rate course.instructor%} <br>
+
+{% endfor %} {% endcomment %}
+
+{% block content %}
+<table class="table table">
+  <thead>
+    <tr>
+      <th scope="col">Subject</th>
+      <th scope="col">Title</th>
+      <th scope="col">Type</th>
+      <th scope="col">Date</th>
+      <th scope="col">Credit</th>
+      <th scope="col">Meeting Time</th>
+      <th scope="col">Room</th>
+      <th scope="col">Instructor</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for course in courses %}
+    <tr>
+        <td>{{course.subject}} {{course.catalog_number}}</td>
+        <td>{{course.course_title}}</td>
+        <td>{{course.course_type}}</td>
+        <td>{{course.dates}}</td>
+        <td>{{course.credit}}</td>
+        <td>{{course.meeting_time}}</td>
+        <td>{{course.room}}</td>
+        <td>{{course.instructor}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock content %}

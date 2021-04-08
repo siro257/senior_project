@@ -13,9 +13,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+    # owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Course
-        fields = ['owner', 'course_id', 'course_title',
-                  'instructor', 'credit', 'semester_offered']
+        # fields = ['owner', 'course_id', 'course_title',
+        #           'instructor', 'credit', 'semester_offered']
+        fields = '__all__'
