@@ -13,10 +13,10 @@ router.register(r'courses', views.CourseViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
-    path('list', views.display, name='courseDetail'),
     path('', views.homePage, name='homepage'),
     path('course', views.coursePage, name='coursePage'),
     path('break', views.breakPage, name='breakPage'),
+    path('list', views.display, name='courseDetail'),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)
