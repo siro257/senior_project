@@ -15,6 +15,12 @@ from api_basic.serializers import CourseSerializer, UserSerializer
 from api_basic.permissions import IsOwnerOrReadOnly
 
 from django.shortcuts import render
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.generic.list import ListView
+
+from .filters import CourseFilter
+
 # Create your views here.
 
 
@@ -36,9 +42,34 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 def display(request):
-    courses = Course.objects.all()
-    return render(request, 'courseDetail.html', {'courses': courses})
+    context = {}
+    filtered_course = CourseFilter(
+        request.GET,
+        queryset=Course.objects.all()
+    )
 
+    context['filtered_courses'] = filtered_course
+
+    # try:
+    #     context = paginator.page(page)
+
+    # except PageNotAnInteger:
+    #     context = paginator.page(1)
+
+    # except EmptyPage:
+    #     context = paginator.page(paginator.num_pages)
+
+    context['filtered_courses'] = filtered_course
+
+    # course_list = Course.objects.all()
+    page = request.GET.get('page')
+    paginator = Paginator(filtered_course.qs, 25)
+    course_page_obj = paginator.get_page(page)
+
+    context['course_page_obj'] = course_page_obj
+
+    return render(request, 'courseDetail.html', context=context)
+    # return render(request, 'courseDetail.html', {'courses': courses})
 # view function for home page of site.
 
 

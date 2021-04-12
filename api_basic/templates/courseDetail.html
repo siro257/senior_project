@@ -8,7 +8,7 @@
 {% endfor %} {% endcomment %}
 
 {% block content %}
-<table class="table table">
+{% comment %} <table class="table table">
   <thead>
     <tr>
       <th scope="col">Subject</th>
@@ -36,6 +36,132 @@
     </tr>
     {% endfor %}
   </tbody>
+</table> {% endcomment %}
+<!-- Search Form -->
+      {% comment %} <form class="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto"  method="get">
+        <div class="form-group mb-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search Subject" aria-label="Search" name="q">
+          <button class="btn btn-outline-white my-2 my-sm-0" type="submit">Search</button>
+        </div>
+      </form> {% endcomment %}
+{% load url_extra %}
+<form method="get">
+  {{filtered_courses.form.as_p}}
+  <input type="submit" value="Press">
+</form>
+
+<table id="course-list" class="table table-boarded" style="width:100%">
+  <thead>
+    <tr>
+      <th>Subject</th>
+      <th>Catalog Number</th>
+      <th>Title</th>
+      <th>Type</th>
+      <th>Date</th>
+      <th>Credit</th>
+      <th>Meeting Time</th>
+      <th>Room</th>
+      <th>Instructor</th>
+      <th>Total seats</th>
+      <th>Seats taken</th>
+      <th>Seats available</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in course_page_obj %}
+      <tr>
+        <td>{{course.subject}}</td>
+        <td>{{course.catalog_number}}</td>
+        <td>{{course.course_title}}</td>
+        <td>{{course.course_type}}</td>
+        <td>{{course.dates}}</td>
+        <td>{{course.credit}}</td>
+        <td>{{course.meeting_time}}</td>
+        <td>{{course.room}}</td>
+        <td>{{course.instructor}}</td>
+        <td>{{course.total_seats}}</td>
+        <td>{{course.seats_taken}}</td>
+        <td>{{course.seats_available}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
 </table>
 
+{% comment %} {% if is_paginated %}
+    {% load proper_paginate %}
+    {% load url_replace %}
+    <ul class="pagination">
+        {% if courses.number == 1 %}
+            <li class="disabled"><span>⇤</span></li>
+        {% else %}
+            <li><a class="page-link" href="?{% url_replace request 'page' 1 %}">⇤</a></li>
+        {% endif %}
+        {% if courses.has_previous %}
+            <li><a class="page-link" href="?{% url_replace request 'page' courses.previous_page_number %}">&laquo;</a></li>
+        {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+        {% endif %}
+        {% for i in paginator|proper_paginate:courses.number %}
+            {% if courses.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+                <li><a class="page-link" href="?{% url_replace request 'page' i %}">{{ i }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if courses.has_next %}
+            <li><a class="page-link" href="?{% url_replace request 'page' courses.next_page_number %}">&raquo;</a></li>
+        {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+        {% endif %}
+        {% if courses.number == paginator.num_pages %}
+            <li class="disabled"><span>⇥</span></li>
+        {% else %}
+            <li><a class="page-link" href="?{% url_replace request 'page' paginator.num_pages %}">⇥</a></li>
+        {% endif %}
+    </ul>
+{% endif %} {% endcomment %}
+
+{% if course_page_obj.has_other_pages %}
+  {% load proper_paginate %}
+  <ul class="pagination">
+    {% if course_page_obj.number == 1 %}
+      {% comment %} <li class="page-item disabled"><a class="page-link" href="?page=1">⇤</a></li> {% endcomment %}
+      <li class="page-item disabled"><a class="page-link" href="{% my_url 1 'page' request.GET.urlencode %}">⇤</a></li>
+    {% else %}
+      <li class="page-item" ><a class="page-link" href="?page=1">⇤</a></li>
+    {% endif %}
+
+    {% if course_page_obj.has_previous %}
+      {% comment %} <li class="page-item"><a class="page-link" href="?page={{course_page_obj.previous_page_number}}">&laquo;</a></li> {% endcomment %}
+      <li class="page-item"><a class="page-link" href="{% my_url course_page_obj.previous_page_number 'page' request.GET.urlencode %}">&laquo;</a></li>
+    {% else %}
+      <li class="page-item disabled"><a class="page-link">&laquo;</a></li>
+    {% endif %}
+
+    {% comment %} {% for i in courses.paginator.page_range %} {% endcomment %}
+    {% for i in course_page_obj.paginator|proper_paginate:course_page_obj.number %}
+
+      {% if course_page_obj.number == i %}
+        
+        <li class="page-item active"><a href="% my_url i 'page' request.GET.urlencode %}" class="page-link">{{i}}</a></li>
+      {% else %}
+        <li li class="page-item"><a class="page-link" href="{% my_url i 'page' request.GET.urlencode %}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if course_page_obj.has_next %}
+      {% comment %} <li class="page-item"><a class="page-link" href="?page={{course_page_obj.next_page_number}}">&raquo;</a></li> {% endcomment %}
+      <li class="page-item"><a class="page-link" href="{% my_url course_page_obj.next_page_number 'page' request.GET.urlencode %}">&raquo;</a></li>
+    {% else %}
+      <li class="page-item disabled"><a class="page-link">&raquo;</a></li>
+    {% endif %}
+
+    {% if course_page_obj.number == course_page_obj.paginator.num_pages %}
+      <li class="page-item disabled"> <a class="page-link">⇥</a></li>
+    {% else %}
+      {% comment %} <li class="page-item"><a class="page-link" href="?page={{course_page_obj.paginator.num_pages}}">⇥</a></li> {% endcomment %}
+      <li class="page-item"><a class="page-link" href="{% my_url course_page_obj.paginator.num_pages 'page' request.GET.urlencode %}">⇥</a></li>
+    {% endif %}
+  </ul>
+{% endif %}
 {% endblock content %}
