@@ -18,6 +18,10 @@
     display: block;
 }
 
+.pagination {
+    justify-content: center;
+ }
+
 .sidenav a:hover{
     color: #f1f1f1;
 }
