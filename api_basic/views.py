@@ -15,24 +15,21 @@ from api_basic.serializers import CourseSerializer, UserSerializer
 from api_basic.permissions import IsOwnerOrReadOnly
 
 from django.shortcuts import render
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.generic.list import ListView
+
+from .filters import CourseFilter
+
 # Create your views here.
 
 
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
-        'users': reverse('user-list', request=request, format=format),
         'courses': reverse('course-list', request=request, format=format)
     })
 
-# class UserList(generics.ListAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-
-
-# class UserDetail(generics.RetrieveAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
@@ -42,40 +39,49 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-
-    @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
 
-# class CourseList(generics.ListCreateAPIView):
+def display(request):
+    context = {}
+    filtered_course = CourseFilter(
+        request.GET,
+        queryset=Course.objects.all()
+    )
 
-#     queryset = Course.objects.all()
-#     serializer_class = CourseSerializer
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    context['filtered_courses'] = filtered_course
 
-#     def perform_create(self, serializer):
-#         serializer.save(owner=self.request.user)
+    # try:
+    #     context = paginator.page(page)
 
+    # except PageNotAnInteger:
+    #     context = paginator.page(1)
 
-# class CourseDetail(generics.RetrieveUpdateDestroyAPIView):
+    # except EmptyPage:
+    #     context = paginator.page(paginator.num_pages)
 
-#     permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-#                           IsOwnerOrReadOnly]
+    context['filtered_courses'] = filtered_course
 
-#     queryset = Course.objects.all()
-#     serializer_class = CourseSerializer
+    # course_list = Course.objects.all()
+    page = request.GET.get('page')
+    paginator = Paginator(filtered_course.qs, 25)
+    course_page_obj = paginator.get_page(page)
 
+    context['course_page_obj'] = course_page_obj
 
+    return render(request, 'courseDetail.html', context=context)
+    # return render(request, 'courseDetail.html', {'courses': courses})
 # view function for home page of site.
+
+
 def homePage(request):
     return render(request, 'homepage.html')
 
 # view function for add a course page
+
+
 def coursePage(request):
     return render(request, 'coursePage.html')
+
 
 def breakPage(request):
     return render(request, 'breakPage.html')

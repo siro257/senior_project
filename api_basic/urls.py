@@ -8,14 +8,15 @@ from rest_framework import renderers
 
 router = DefaultRouter()
 router.register(r'courses', views.CourseViewSet)
-router.register(r'users', views.UserViewSet)
+# router.register(r'users', views.UserViewSet)
 
 
 urlpatterns = [
-    #path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('', views.homePage, name='homepage'),
-    path('homepage/course', views.coursePage, name='coursePage'),
-    path('homepage/break', views.breakPage, name='breakPage'),
+    path('course', views.coursePage, name='coursePage'),
+    path('break', views.breakPage, name='breakPage'),
+    path('list', views.display, name='courseDetail'),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)
