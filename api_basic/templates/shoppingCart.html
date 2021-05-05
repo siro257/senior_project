@@ -1,0 +1,44 @@
+{% extends "base_generic.html" %}
+{% block content %}
+  <p>This is the shopping cart page.</p>
+
+
+  <table id="course-list" class="table table-boarded" style="width:100%">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Subject</th>
+      <th>Catalog Number</th>
+      <th>Title</th>
+      <th>Type</th>
+      <th>Date</th>
+      <th>Credit</th>
+      <th>Meeting Time</th>
+      <th>Room</th>
+      <th>Instructor</th>
+      <th>Total seats</th>
+      <th>Seats taken</th>
+      <th>Seats available</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in cart_courses %}
+      <tr>
+        <td><input class="uk-checkbox " type="checkbox" name="checked_selection" value={{course.course_id}}></td> 
+        <td>{{course.subject}}</td>
+        <td>{{course.catalog_number}}</td>
+        <td>{{course.course_title}}</td>
+        <td>{{course.course_type}}</td>
+        <td>{{course.dates}}</td>
+        <td>{{course.credit}}</td>
+        <td>{{course.meeting_time}}</td>
+        <td>{{course.room}}</td>
+        <td>{{course.instructor}}</td>
+        <td>{{course.total_seats}}</td>
+        <td>{{course.seats_taken}}</td>
+        <td>{{course.seats_available}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

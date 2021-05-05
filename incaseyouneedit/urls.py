@@ -24,4 +24,5 @@ urlpatterns = [
     path('homepage/', include('api_basic.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('', RedirectView.as_view(url='homepage/', permanent=True)),
+    path('api/', include('cart.urls'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

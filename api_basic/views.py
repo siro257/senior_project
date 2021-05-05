@@ -20,6 +20,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic.list import ListView
 
 from .filters import CourseFilter
+from cart.models import *
 
 # Create your views here.
 
@@ -42,23 +43,35 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 def display(request):
+
+    # add to shopping cart
+
+    if request.method == 'POST':
+        print(request.POST.getlist('checked_selection'))
+        course_ids = request.POST.getlist('checked_selection')
+        user = request.user
+        print(user)
+        if user.is_authenticated:
+            print(Cart.objects.filter(user=user))
+            curr_cart = Cart.objects.filter(user=user)[0]
+            curr_cart_items = CartItem.objects.filter(cart=curr_cart)
+            for item in curr_cart_items:
+                print(item.product.course_id)
+
+            for course_id in course_ids:
+                course = Course.objects.get(pk=course_id)
+                cart_item = CartItem(user=user, cart=curr_cart, product=course)
+                cart_item.save()
+
+        return render(request, 'homepage.html')
+        # for id in course_ids:
+
     context = {}
+    print(request.GET)
     filtered_course = CourseFilter(
         request.GET,
         queryset=Course.objects.all()
     )
-
-    context['filtered_courses'] = filtered_course
-
-    # try:
-    #     context = paginator.page(page)
-
-    # except PageNotAnInteger:
-    #     context = paginator.page(1)
-
-    # except EmptyPage:
-    #     context = paginator.page(paginator.num_pages)
-
     context['filtered_courses'] = filtered_course
 
     # course_list = Course.objects.all()
@@ -69,7 +82,7 @@ def display(request):
     context['course_page_obj'] = course_page_obj
 
     return render(request, 'courseDetail.html', context=context)
-    # return render(request, 'courseDetail.html', {'courses': courses})
+
 # view function for home page of site.
 
 
@@ -85,3 +98,40 @@ def coursePage(request):
 
 def breakPage(request):
     return render(request, 'breakPage.html')
+
+
+def cartPage(request):
+    context = {}
+    cart_course = []
+    user = request.user
+    if user.is_authenticated:
+        curr_cart = Cart.objects.filter(user=user)[0]
+        curr_cart_items = CartItem.objects.filter(cart=curr_cart)
+        print(curr_cart_items)
+        for item in curr_cart_items:
+            print(Course.objects.get(pk=item.product.course_id))
+            cart_course.append(Course.objects.get(pk=item.product.course_id))
+
+        context['cart_courses'] = cart_course
+
+    # DELETE FEATURE -- TODO
+    if request.method == 'POST':
+        print(request.POST.getlist('checked_selection'))
+        course_ids = request.POST.getlist('checked_selection')
+        user = request.user
+        print(user)
+        if user.is_authenticated:
+            print(Cart.objects.filter(user=user))
+            curr_cart = Cart.objects.filter(user=user)[0]
+            curr_cart_items = CartItem.objects.filter(cart=curr_cart)
+            for item in curr_cart_items:
+                print(item.product.course_id)
+
+            for course_id in course_ids:
+                course = Course.objects.get(pk=course_id)
+                cart_item = CartItem(user=user, cart=curr_cart, product=course)
+                cart_item.save()
+
+    # GENERATE FEATURE -- TODO
+
+    return render(request, 'shoppingCart.html', context=context)
