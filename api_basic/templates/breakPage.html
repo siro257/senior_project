@@ -1,4 +1,11 @@
 {% extends "base_generic.html" %}
 {% block content %}
-
+    <p>Add a break to specify when you do not want to take classes.</p>
+    <form method = "GET">
+        {{ add_time_form }}
+        <div></div>
+        {{ weekday_form }}
+        <div></div>
+        <input type = "submit" value = "Submit">
+    </form>
 {% endblock %}

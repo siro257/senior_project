@@ -21,6 +21,9 @@ from django.views.generic.list import ListView
 
 from .filters import CourseFilter
 
+from.forms import addTimeForm
+from .forms import addWeekdays
+
 # Create your views here.
 
 
@@ -84,4 +87,14 @@ def coursePage(request):
 
 
 def breakPage(request):
-    return render(request, 'breakPage.html')
+    context = {}
+    context['add_time_form'] = addTimeForm()
+    context['weekday_form'] = addWeekdays()
+    if request.method == "GET":
+        form = addTimeForm(request.GET)
+        if form.is_valid():
+            start_hour = request.GET['start_break_hour']
+            start_minute = request.GET['start_break_minute']
+            end_hour = request.GET['end_break_hour']
+            end_minute = request.GET['end_break_minute']
+    return render(request, 'breakPage.html', context)
