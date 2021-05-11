@@ -124,13 +124,12 @@ def cartPage(request):
             print(Cart.objects.filter(user=user))
             curr_cart = Cart.objects.filter(user=user)[0]
             curr_cart_items = CartItem.objects.filter(cart=curr_cart)
-            for item in curr_cart_items:
-                print(item.product.course_id)
 
             for course_id in course_ids:
-                course = Course.objects.get(pk=course_id)
-                cart_item = CartItem(user=user, cart=curr_cart, product=course)
-                cart_item.save()
+                instance = CartItem.objects.filter(
+                    user=user).filter(product=int(course_id))
+                instance.delete()
+        return render(request, 'homepage.html')
 
     # GENERATE FEATURE -- TODO
 
