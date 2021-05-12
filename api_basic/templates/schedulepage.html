@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+{% block content %}
+  <p>This is the schedule page.</p>
+
+  {% for s in schedule_context %}
+  
+    <a>{{s}}</a>
+  {% endfor %}
+
+{% endblock %}

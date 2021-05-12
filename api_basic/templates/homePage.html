@@ -3,10 +3,10 @@
 
 {% block content %}
     <div class = "actions">
-        <ul class = "addSth">
-            <li><a href="{% url 'courseDetail' %}">Add A Course</a></li>
-            <li><a href="{% url 'breakPage' %}">Add A Break</a></li>
-            <li><a href="{% url 'shoppingCart' %}">Shopping Cart</a></li>
+        <ul class = "list-group">
+            <li class="list-group-item"><a href="{% url 'courseDetail' %}"><i class="bi bi-calendar3"></i> Add A Course</a></li>
+            <li class="list-group-item"><a href="{% url 'breakPage' %}"><i class="bi-alarm"></i> Add A Break</a></li>
+            <li class="list-group-item"><a href="{% url 'shoppingCart' %}"><i class="bi bi-cart"></i> Shopping Cart</a></li>
         </ul>
     </div>
 {% endblock %}

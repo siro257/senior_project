@@ -17,7 +17,8 @@ urlpatterns = [
     path('course', views.coursePage, name='coursePage'),
     path('break', views.breakPage, name='breakPage'),
     path('list', views.display, name='courseDetail'),
-    path('cart', views.cartPage, name='shoppingCart')
+    path('cart', views.cartPage, name='shoppingCart'),
+    path('schedule', views.schedulePage, name='schedulePage'),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)

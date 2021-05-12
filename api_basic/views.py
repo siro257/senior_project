@@ -21,6 +21,10 @@ from django.views.generic.list import ListView
 
 from .filters import CourseFilter
 from cart.models import *
+import re
+import datetime
+import time
+
 
 # Create your views here.
 
@@ -100,6 +104,10 @@ def breakPage(request):
     return render(request, 'breakPage.html')
 
 
+def schedulePage(request):
+    return render(request, 'schedulepage.html')
+
+
 def cartPage(request):
     context = {}
     cart_course = []
@@ -114,23 +122,60 @@ def cartPage(request):
 
         context['cart_courses'] = cart_course
 
-    # DELETE FEATURE -- TODO
     if request.method == 'POST':
-        print(request.POST.getlist('checked_selection'))
-        course_ids = request.POST.getlist('checked_selection')
-        user = request.user
-        print(user)
-        if user.is_authenticated:
-            print(Cart.objects.filter(user=user))
-            curr_cart = Cart.objects.filter(user=user)[0]
-            curr_cart_items = CartItem.objects.filter(cart=curr_cart)
+        # DELETE FEATURE
+        if 'delete_course' in request.POST:
+            print(request.POST.getlist('checked_selection'))
+            course_ids = request.POST.getlist('checked_selection')
+            user = request.user
+            print(user)
+            if user.is_authenticated:
+                print(Cart.objects.filter(user=user))
+                curr_cart = Cart.objects.filter(user=user)[0]
+                curr_cart_items = CartItem.objects.filter(cart=curr_cart)
 
-            for course_id in course_ids:
-                instance = CartItem.objects.filter(
-                    user=user).filter(product=int(course_id))
-                instance.delete()
-        return render(request, 'homepage.html')
+                for course_id in course_ids:
+                    instance = CartItem.objects.filter(
+                        user=user).filter(product=int(course_id))
+                    instance.delete()
+            return render(request, 'homepage.html')
 
-    # GENERATE FEATURE -- TODO
+        # SCHEDULE GENERATE FEATURE -- TODO
+        elif 'create_schedule' in request.POST:
+            #     schedule_context = {}
+            #     course_ids = request.POST.getlist('checked_selection')
+            #     user = request.user
+            #     print(user)
+            #     if user.is_authenticated:
+            #         for course_id in course_ids:
+            #             course = Course.objects.get(pk=course_id)
+            #             time = course.meeting_time
+            #             tmp = time.split(" ", 1)
+            #             days = re.findall('[A-Z][^A-Z]*', tmp[0])
+            #             schedule = tmp[1]
+
+            #             for day in days:
+            #                 if day not in schedule_context:
+            #                     schedule_context[day] = []
+            #                 schedule_context[day].append(schedule)
+
+            #         for key in schedule_context:
+            #             q = []
+            #             for s in schedule_context[key]:
+            #                 q.append(s.split(' - '))
+            #             tformat = '%I:%M %p'
+            #             time_hours = [time.strptime(t[0], tformat) for t in q]
+            #             time_hours_end = [time.strptime(t[1], tformat) for t in q]
+            #             result = [time.strftime(tformat, h)
+            #                       for h in sorted(time_hours)]
+            #             result_end = [time.strftime(tformat, h)
+            #                           for h in sorted(time_hours_end)]
+
+            #             res = []
+            #             for i in range(len(result)):
+            #                 res.append([f'{result[i]} - {result_end[i]}'])
+            #             schedule_context[key] = res
+
+            return render(request, 'schedulepage.html')
 
     return render(request, 'shoppingCart.html', context=context)

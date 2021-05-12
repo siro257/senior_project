@@ -6,7 +6,8 @@
 {% load url_extra %}
 <form method="get">
   {{filtered_courses.form.as_p}}
-  <input type="submit" value="Search">
+  <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i> Search</Button>
+
 </form>
 
 <form method="POST">
@@ -49,9 +50,9 @@
     {% endfor %}
   </tbody>
 </table>
-<input type="submit" value="save course"/>
+<button class="btn btn-outline-primary" type="submit"><i class="bi bi-cart-check-fill"></i> Save Course</Button>
 </form>
-
+&ensp;
 {% if course_page_obj.has_other_pages %}
   {% load proper_paginate %}
   <ul class="pagination">

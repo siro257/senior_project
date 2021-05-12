@@ -20,8 +20,3 @@ class CartItem(models.Model):
     product = models.ForeignKey(Course, on_delete=models.CASCADE)
     # total_items = models.IntegerField(default=0)
     quantity = models.IntegerField(default=1)
-
-
-@receiver(post_save, sender=CartItem)
-def correct_price(sender, **kwargs):
-    print('called correct prices')
