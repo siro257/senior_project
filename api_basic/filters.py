@@ -9,5 +9,6 @@ class CourseFilter(django_filters.FilterSet):
         model = Course
 
         # fields = ['subject']
-        fields = ['subject', 'catalog_number']
+        fields = ['subject', 'catalog_number',
+                  'instructor', 'credit', 'meeting_time']
         # fields = '__all__'
