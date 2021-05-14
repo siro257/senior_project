@@ -61,16 +61,18 @@ class addTimeForm(forms.Form):
 
     def clean_end_break_minute(self):
         start_hr = int(self.cleaned_data['start_break_hour'])
-        print(start_hr)
         start_min = int(self.cleaned_data['start_break_minute'])
         end_hr = int(self.cleaned_data['end_break_hour'])
-        print(end_hr)
         end_min = int(self.cleaned_data['end_break_minute'])
+        print(start_hr)
+        print(end_hr)
 
         if start_hr > end_hr:
             raise ValidationError(_('Invalid end time - end time must be later than start time'))
         if start_hr == end_hr and start_min >= end_min:
             raise ValidationError(_('Invalid end time - end time must be later than start time'))
+        return end_min
 
 class addWeekdays(forms.Form):
     weekday = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, choices=Weekday_Choices, required=False)
+

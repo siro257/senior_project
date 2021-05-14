@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import renderers
 from rest_framework.reverse import reverse
 from rest_framework import viewsets
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 from rest_framework.decorators import action
 
@@ -87,14 +89,15 @@ def coursePage(request):
 
 
 def breakPage(request):
-    context = {}
-    context['add_time_form'] = addTimeForm()
-    context['weekday_form'] = addWeekdays()
-    if request.method == "GET":
-        form = addTimeForm(request.GET)
-        if form.is_valid():
-            start_hour = request.GET['start_break_hour']
-            start_minute = request.GET['start_break_minute']
-            end_hour = request.GET['end_break_hour']
-            end_minute = request.GET['end_break_minute']
-    return render(request, 'breakPage.html', context)
+    if request.method == "POST":
+        timeForm = addTimeForm(request.POST)
+        weekdayForm = addWeekdays(request.POST)
+        if timeForm.is_valid():
+            start_hour = timeForm.cleaned_data['start_break_hour']
+            start_minute = timeForm.cleaned_data['start_break_minute']
+            end_hour = timeForm.cleaned_data['end_break_hour']
+            end_minute = timeForm.cleaned_data['end_break_minute']
+            return HttpResponseRedirect(reverse("homepage"))
+        else:
+            messages.error(request, {"The starting time must be earlier than the ending time"})
+    return render(request, 'breakPage.html', context={'add_time_form':addTimeForm(initial={'start_break_hour': '12', 'end_break_hour': '14'}), 'weekday_form': addWeekdays})
