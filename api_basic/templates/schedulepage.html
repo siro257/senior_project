@@ -1,10 +1,33 @@
 {% extends "base_generic.html" %}
 {% block content %}
-  <p>This is the schedule page.</p>
-
-  {% for s in schedule_context %}
-  
+  Monday: <br />
+  {% for s in M %}
     <a>{{s}}</a>
+    <br />
+  {% endfor %}
+  -------------------------------------- <br />
+  Tuesday: <br />
+  {% for s in Tu %}
+    <a>{{s}}</a>
+    <br />
+  {% endfor %}
+  -------------------------------------- <br />
+  Wednesday: <br />
+  {% for s in W %}
+    <a>{{s}}</a>
+    <br />
+  {% endfor %}
+  -------------------------------------- <br />
+  Thursday: <br />
+  {% for s in Th %}
+    <a>{{s}}</a>
+    <br />
+  {% endfor %}
+  -------------------------------------- <br />
+  Friday: <br />
+  {% for s in F %}
+    <a>{{s}}</a>
+    <br />
   {% endfor %}
 
 {% endblock %}

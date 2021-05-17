@@ -1,3 +1,4 @@
+from .forms import addWeekdays
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import renderers
@@ -24,11 +25,11 @@ from django.views.generic.list import ListView
 from .filters import CourseFilter
 from cart.models import *
 import re
-import datetime
+from datetime import datetime
+
 import time
 
 from.forms import addTimeForm
-from .forms import addWeekdays
 
 # Create your views here.
 
@@ -115,8 +116,9 @@ def breakPage(request):
             end_minute = timeForm.cleaned_data['end_break_minute']
             return HttpResponseRedirect(reverse("homepage"))
         else:
-            messages.error(request, {"The starting time must be earlier than the ending time"})
-    return render(request, 'breakPage.html', context={'add_time_form':addTimeForm(initial={'start_break_hour': '12', 'end_break_hour': '14'}), 'weekday_form': addWeekdays})
+            messages.error(
+                request, {"The starting time must be earlier than the ending time"})
+    return render(request, 'breakPage.html', context={'add_time_form': addTimeForm(initial={'start_break_hour': '12', 'end_break_hour': '14'}), 'weekday_form': addWeekdays})
 
 
 def schedulePage(request):
@@ -157,40 +159,30 @@ def cartPage(request):
 
         # SCHEDULE GENERATE FEATURE -- TODO
         elif 'create_schedule' in request.POST:
-            #     schedule_context = {}
-            #     course_ids = request.POST.getlist('checked_selection')
-            #     user = request.user
-            #     print(user)
-            #     if user.is_authenticated:
-            #         for course_id in course_ids:
-            #             course = Course.objects.get(pk=course_id)
-            #             time = course.meeting_time
-            #             tmp = time.split(" ", 1)
-            #             days = re.findall('[A-Z][^A-Z]*', tmp[0])
-            #             schedule = tmp[1]
+            schedule_context = {}
+            course_ids = request.POST.getlist('checked_selection')
+            user = request.user
+            print(user)
+            if user.is_authenticated:
+                for course_id in course_ids:
+                    course = Course.objects.get(pk=course_id)
+                    time = course.meeting_time
+                    tmp = time.split(" ", 1)
+                    days = re.findall('[A-Z][^A-Z]*', tmp[0])
+                    schedule = tmp[1]
 
-            #             for day in days:
-            #                 if day not in schedule_context:
-            #                     schedule_context[day] = []
-            #                 schedule_context[day].append(schedule)
+                    for day in days:
+                        if day not in schedule_context:
+                            schedule_context[day] = []
+                        schedule_context[day].append(schedule)
+                print(schedule_context)
 
-            #         for key in schedule_context:
-            #             q = []
-            #             for s in schedule_context[key]:
-            #                 q.append(s.split(' - '))
-            #             tformat = '%I:%M %p'
-            #             time_hours = [time.strptime(t[0], tformat) for t in q]
-            #             time_hours_end = [time.strptime(t[1], tformat) for t in q]
-            #             result = [time.strftime(tformat, h)
-            #                       for h in sorted(time_hours)]
-            #             result_end = [time.strftime(tformat, h)
-            #                           for h in sorted(time_hours_end)]
+                for key in schedule_context:
+                    schedule_context[key] = sorted(
+                        schedule_context[key], key=lambda x: datetime.strptime(x.split(' - ')[0], '%I:%M %p'))
 
-            #             res = []
-            #             for i in range(len(result)):
-            #                 res.append([f'{result[i]} - {result_end[i]}'])
-            #             schedule_context[key] = res
+                print(schedule_context)
 
-            return render(request, 'schedulepage.html')
+            return render(request, 'schedulepage.html', context=schedule_context)
 
     return render(request, 'shoppingCart.html', context=context)

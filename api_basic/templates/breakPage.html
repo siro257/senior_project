@@ -16,7 +16,9 @@
         <div></div>
         {{ weekday_form }}
         <div></div>
-        <input type = "submit" value = "Submit">
+        {% comment %} <input type = "submit" value = "Submit"> {% endcomment %}
+        <button class="btn btn-outline-primary" type="submit" name='add_break'><i class="bi bi-alarm-fill"></i> Add Break</Button>
+
     </form>
 {% endblock %}
 
